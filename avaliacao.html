@@ -436,7 +436,7 @@
       <span class="badge">Pesquisa Acadêmica · CONNEPI 2026</span>
       <h1>Avaliação do Museu Virtual<br>da História da Computação</h1>
       <p>Responda às questões abaixo com base na sua experiência no MVHC.<br>
-         As respostas são <strong style="color:var(--cyan)">totalmente anônimas</strong> e levam cerca de <strong style="color:var(--text)">3 minutos</strong>.</p>
+         O formulário não solicita nome, e-mail ou outros dados de identificação pessoal. O preenchimento leva cerca de <strong style="color:var(--text)">3 minutos</strong>.</p>
     </header>
 
     <!-- ═══ SEÇÃO 1: PERFIL ═══ -->
@@ -574,7 +574,7 @@
 
       <!-- Q9 -->
       <div class="likert-row" id="row-q9">
-        <span class="likert-label"><span class="q-num">9</span>Contribuição do ambiente para conhecer a história da computação.</span>
+        <span class="likert-label"><span class="q-num">9</span>Contribuição do ambiente para a compreensão da história da computação.</span>
         <div class="likert-stars" data-key="q9">
           <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span>
           <span class="star" data-v="3">★</span><span class="star" data-v="4">★</span>
@@ -618,6 +618,25 @@
       </div>
     </div>
 
+    <!-- Consentimento -->
+    <div class="section-card" style="margin-bottom:16px">
+      <label id="consent-label" style="display:flex;align-items:flex-start;gap:14px;cursor:pointer">
+        <span id="consent-box" onclick="toggleConsent()" style="
+          flex-shrink:0; margin-top:2px;
+          width:20px; height:20px;
+          border:2px solid var(--border);
+          border-radius:5px;
+          display:flex; align-items:center; justify-content:center;
+          transition:border-color .2s, background .2s;
+        "></span>
+        <span style="font-size:.88rem;color:var(--muted);line-height:1.6">
+          Declaro que participei voluntariamente e autorizo o uso das respostas,
+          de forma não identificada, para fins acadêmicos.
+        </span>
+      </label>
+      <span class="q-error" id="err-consent"></span>
+    </div>
+
     <!-- Erro global -->
     <span class="erro-global hidden" id="erro-global"></span>
 
@@ -652,6 +671,18 @@
 
   <!-- ════ LÓGICA UI ════ -->
   <script>
+    /* Consentimento */
+    var consentido = false;
+
+    function toggleConsent() {
+      consentido = !consentido;
+      var box = document.getElementById('consent-box');
+      box.style.borderColor  = consentido ? 'var(--cyan)' : 'var(--border)';
+      box.style.background   = consentido ? 'var(--cyan)'  : 'transparent';
+      box.innerHTML          = consentido ? '<svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="#07091A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+      document.getElementById('err-consent').textContent = '';
+    }
+
     /* Estado do formulário */
     var respostas = {
       perfil:     null,
@@ -723,6 +754,11 @@
           row.style.borderColor = 'rgba(255,95,107,.5)';
           setTimeout(function() { row.style.borderColor = ''; }, 3000);
         });
+        ok = false;
+      }
+
+      if (!consentido) {
+        document.getElementById('err-consent').textContent = 'É necessário confirmar a participação voluntária para enviar.';
         ok = false;
       }
 
